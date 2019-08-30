@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="memsource",
+    name="libmemsource",
     version="1.0",
     author="tkato",
     author_email="kato@ideainstitute.co.jp",
