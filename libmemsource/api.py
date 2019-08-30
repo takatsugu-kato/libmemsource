@@ -89,6 +89,8 @@ class MemsourceAPI:
                     result = json.loads(response_body.split('\n')[0])
                 elif content_type == "application/octet-stream":
                     result = response_body
+                elif content_type == "application/tmx":
+                    result = response_body
         except urllib.error.HTTPError as err:#If HTTP status code is 4xx or 5xx
             print(err)
             raise APIException(err)
@@ -175,6 +177,60 @@ class MemsourceAPI:
         params = {'token': self.token}
 
         result = self.__call_rest(url, "GET", params=params)
+        return result
+
+    def download_tmx_file(self, tm_id):
+        """
+        Download tmx file with tm_id
+
+        Args:
+            tm_id (str): TM id
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}/export".format(tm_id)
+        params = {'token': self.token}
+        # headers = {"Content-Type" : "application/json"}
+        print('Downloading tmx file (tm_id: "{}")...'.format(tm_id))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
+    def create_tm(self, name, source_lang, target_lang, client_id=None):
+        """
+        Create TM
+
+        Args:
+            name ([str]): TM name
+            source_lang ([str]): Source lang
+            target_lang ([list]): Target Lang
+            client_id ([str], optional): client_id. Defaults to None.
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories"
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "name": name,
+            "sourceLang": source_lang,
+            "targetLangs": target_lang,
+            }
+        if client_id is not None:
+            obj["client"] = {"id": client_id}
+        result = self.__call_rest(url, "POST", body=obj, params=params, headers=headers)
+        print("Creating TM {} ...".format(name))
+        return result
+
+    def upload_tmx(self, tmx_file_path, tm_id):
+        """
+        Upload tmx file
+
+        Args:
+            tmx_file_path (str): tmx file path
+        """
+
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}/import".format(tm_id)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/octet-stream", "Content-Disposition" : "filename*=UTF-8''{}".format(os.path.basename(tmx_file_path))}
+        tmx_file = open(tmx_file_path, 'rb').read()
+        result = self.__call_rest(url, "POST", body=tmx_file, params=params, headers=headers)
+        print("Uploading TMX {}...".format(tmx_file_path))
         return result
 
     def download_mxlf_file(self, project_uid, job_uid):
