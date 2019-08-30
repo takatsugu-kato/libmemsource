@@ -3,6 +3,7 @@ This modules is to handle memsource using API
 """
 import urllib.request
 import json
+import os
 import ssl
 from retry import retry
 
