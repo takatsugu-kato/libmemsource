@@ -190,7 +190,7 @@ class MemsourceAPI:
         url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}/export".format(tm_id)
         params = {'token': self.token}
         # headers = {"Content-Type" : "application/json"}
-        print('Downloading tmx file (tm_id: "{}")...'.format(tm_id))
+        print('Downloading TMX (tm_id: "{}")...'.format(tm_id))
         result = self.__call_rest(url, "GET", params=params)
         return result
 
