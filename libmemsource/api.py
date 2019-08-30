@@ -275,13 +275,13 @@ class MemsourceAPI:
     def search_tm(self, tm_id, query, source_lang, target_langs):
         """
         Search TM
-        
+
         Args:
             tm_id (str): TM id
             query (str): Source string
             source_lang (str): Source language code
             target_langs ([list]): Target language codes
-        
+
         Returns:
             json: result json
         """
