@@ -272,6 +272,30 @@ class MemsourceAPI:
         mxlf_file_obj.close()
         return result
 
+    def search_tm(self, tm_id, query, source_lang, target_langs):
+        """
+        Search TM
+        
+        Args:
+            tm_id (str): TM id
+            query (str): Source string
+            source_lang (str): Source language code
+            target_langs ([list]): Target language codes
+        
+        Returns:
+            json: result json
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}/search".format(tm_id)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "query": query,
+            "sourceLang": source_lang,
+            "targetLangs": target_langs
+        }
+        result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
 def get_index_from_value_and_key(data, val, key, value_type):
     """
     Get index from value and key
