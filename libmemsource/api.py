@@ -80,6 +80,7 @@ class MemsourceAPI:
         request = urllib.request.Request(req_url, data=data, method=method, headers=headers)
         try:
             with urllib.request.urlopen(request) as response:
+                content_type = ""
                 response_header = response.getheaders()
                 for head in response_header:
                     if head[0] == "Content-Type":
@@ -92,6 +93,8 @@ class MemsourceAPI:
                     result = response_body
                 elif content_type == "application/tmx":
                     result = response_body
+                elif content_type == "":
+                    result = str(response.getcode())
         except urllib.error.HTTPError as err:#If HTTP status code is 4xx or 5xx
             print(err)
             raise APIException(err)
@@ -294,6 +297,21 @@ class MemsourceAPI:
             "targetLangs": target_langs
         }
         result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
+    def delete_tm(self, tm_id):
+        """
+        Delete TM
+
+        Args:
+            tm_id (str): TM id
+
+        Returns:
+            json: result json
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}".format(tm_id)
+        params = {'token': self.token}
+        result = self.__call_rest(url, "DELETE", params=params)
         return result
 
 def get_index_from_value_and_key(data, val, key, value_type):
