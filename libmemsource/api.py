@@ -183,6 +183,19 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def list_all_conversations(self, job_uid):
+        """
+        List all conversations in job
+
+        Args:
+            job_uid (str): Job id
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/jobs/{}/conversations".format(job_uid)
+        params = {'token': self.token}
+        print('Getting concersations (job_uid: "{}")...'.format(job_uid))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def download_tmx_file(self, tm_id):
         """
         Download tmx file with tm_id
