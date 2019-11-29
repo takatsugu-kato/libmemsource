@@ -87,7 +87,9 @@ class MemsourceAPI:
                         content_type = head[1]
                         break
                 response_body = response.read().decode("utf-8")
-                if content_type == "application/json":
+                if response_body == "":
+                    result = None
+                elif content_type == "application/json":
                     result = json.loads(response_body.split('\n')[0])
                 elif content_type == "application/octet-stream":
                     result = response_body
