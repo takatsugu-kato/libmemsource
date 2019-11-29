@@ -138,6 +138,27 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def get_segments(self, project_uid, job_uid, begin_index, end_index):
+        """
+        Get Segment data
+
+        Args:
+            project_uid (str): To get project UID 
+            job_uid (str): To get Job UID
+            begin_index (int): Begin segment index
+            end_index (int): End segment index
+
+        Returns:
+            json: segment data
+        """
+
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}/jobs/{}/segments".format(project_uid, job_uid)
+        params = {'token': self.token, 'beginIndex': begin_index, 'endIndex': end_index}
+
+        print('Getting "{}:{}:{}:{}" segment data...'.format(project_uid, job_uid, begin_index, end_index))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def pretranslate_using_tm(self, project_uid, job_uids):
         """
         Pretranslate jobs using tm
