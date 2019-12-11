@@ -11,10 +11,16 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 class APIException(Exception):
     """API Exception"""
+    def __init__(self, message):
+        self.message = message
 class ProjectIDException(Exception):
     """Project ID Execption"""
+    def __init__(self, message):
+        self.message = message
 class PreTranslateException(Exception):
     """Pretranslate Exception"""
+    def __init__(self, message):
+        self.message = message
 
 class MemsourceAPI:
     """
@@ -98,8 +104,7 @@ class MemsourceAPI:
                 elif content_type == "":
                     result = str(response.getcode())
         except urllib.error.HTTPError as err:#If HTTP status code is 4xx or 5xx
-            print(err)
-            raise APIException(err)
+            raise APIException(json.loads(err.read().decode('utf-8')))
         except urllib.error.URLError as err:#If HTTP connection is fails
             print(err)
             raise APIException(err)
@@ -388,7 +393,7 @@ def get_project_content(project_list, internal_id, key):
     index = get_index_from_value_and_key(project_list['content'], internal_id, "internalId", type(0))
     if index is None:
         print('Project id "{}" is not found in Memsource ...'.format(internal_id))
-        raise ProjectIDException()
+        raise ProjectIDException('Project id "{}" is not found in Memsource ...'.format(internal_id))
     return project_list['content'][index][key]
 
 def pretranslate_project(memsource_api, project_uid, jobs_list):
