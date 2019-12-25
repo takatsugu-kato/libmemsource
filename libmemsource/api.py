@@ -110,6 +110,20 @@ class MemsourceAPI:
             raise APIException(err)
         return result
 
+    def get_workflow_steps(self, project_uid):
+        """
+        Get workflow level
+
+        Returns:
+            json: workflow level
+        """
+
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}/workflowSteps".format(project_uid)
+        params = {'token': self.token}
+
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def get_project(self):
         """
         Get All Project in Memsource
