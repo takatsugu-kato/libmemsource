@@ -148,7 +148,7 @@ class MemsourceAPI:
         Get Segment data
 
         Args:
-            project_uid (str): To get project UID 
+            project_uid (str): To get project UID
             job_uid (str): To get Job UID
             begin_index (int): Begin segment index
             end_index (int): End segment index
@@ -354,6 +354,38 @@ class MemsourceAPI:
         params = {'token': self.token}
         result = self.__call_rest(url, "DELETE", params=params)
         return result
+
+    def run_qa_batch(self, project_uid, job_uids):
+        """
+        Run batch QA
+
+        Args:
+            project_uid (str): Project uid
+            job_uids (list): Job uids
+
+        Returns:
+            json: qa result
+        """
+        url = "https://cloud.memsource.com/web/api2/v3/projects/{}/jobs/qualityAssurances/run/".format(project_uid)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "jobs": list(map(change_uid_to_dict, job_uids)),
+            }
+        result = self.__call_rest(url, "POST", body=obj, params=params, headers=headers)
+        print("Unning QA (batch) {} ...".format(project_uid))
+        return result
+
+def change_uid_to_dict(uid):
+    """
+    Chnage UID to dict
+    Args:
+        uid (str): uid
+
+    Returns:
+        dict: uid with uid key dict
+    """
+    return {'uid': uid}
 
 def get_index_from_value_and_key(data, val, key, value_type):
     """
