@@ -110,6 +110,22 @@ class MemsourceAPI:
             raise APIException(err)
         return result
 
+    def get_job(self, project_uid, job_uid):
+        """
+        Get job datails
+        Args:
+            project_uid (str): project uid
+            job_uid (str): job uid
+
+        Returns:
+            json: job datails
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}/jobs/{}".format(project_uid, job_uid)
+        params = {'token': self.token}
+        print('Getting "{}:{}" jobs datals...'.format(project_uid, job_uid))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def get_workflow_steps(self, project_uid):
         """
         Get workflow level
