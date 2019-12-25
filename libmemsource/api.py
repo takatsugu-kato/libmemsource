@@ -406,6 +406,14 @@ class MemsourceAPI:
         print("Unning QA (batch) {} ...".format(project_uid))
         return result
 
+    @staticmethod
+    def extract_segment_by_workflow_level(segment_dict, workflow_level):
+        segment_list = []
+        for segment in segment_dict["segments"]:
+            if segment["workflowLevel"] == workflow_level:
+                segment_list.append(segment)
+        return segment_list
+
 def change_uid_to_dict(uid):
     """
     Chnage UID to dict
