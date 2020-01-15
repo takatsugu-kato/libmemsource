@@ -140,7 +140,7 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
-    def get_project(self):
+    def list_projects(self):
         """
         Get All Project in Memsource
 
@@ -151,6 +151,20 @@ class MemsourceAPI:
         url = "https://cloud.memsource.com/web/api2/v1/projects/"
         params = {'token': self.token}
 
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
+    def get_project(self, project_uid):
+        """
+        Get Project datails
+
+        Args:
+            project_uid (str): project UID
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}".format(project_uid)
+        params = {'token': self.token}
+
+        print('Getting "{}" project...'.format(project_uid))
         result = self.__call_rest(url, "GET", params=params)
         return result
 
