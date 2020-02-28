@@ -35,6 +35,7 @@ class MemsourceAPI:
         self.username = username
         self.password = password
         self.token = ""
+        self.api_calls = 0
         result = self.__get_token()
         self.token = result['token']
 
@@ -54,8 +55,7 @@ class MemsourceAPI:
         result = self.__call_rest(url, "POST", body=obj, headers=headers)
         return result
 
-    @staticmethod
-    def __call_rest(url, method, body=None, params=None, headers=None):
+    def __call_rest(self, url, method, body=None, params=None, headers=None):
         """
         Call REST using urllib.request
 
@@ -80,6 +80,9 @@ class MemsourceAPI:
             data = None
         else:
             data = body
+
+        # countup api calls
+        self.api_calls = self.api_calls + 1
 
         # Prepare http request then POST
         req_url = '{0}?{1}'.format(url, urllib.parse.urlencode(params))
