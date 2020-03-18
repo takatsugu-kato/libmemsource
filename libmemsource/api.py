@@ -325,7 +325,7 @@ class MemsourceAPI:
         headers = {"Content-Type" : "application/octet-stream", "Content-Disposition" : "filename*=UTF-8''{}".format(os.path.basename(tb_file_path))}
         tb_file = open(tb_file_path, 'rb').read()
         result = self.__call_rest(url, "POST", body=tb_file, params=params, headers=headers)
-        print("Uploading TB file {}...".format(tb_file))
+        print("Uploading TB file {}...".format(tb_file_path))
         return result
 
     def create_tm(self, name, source_lang, target_lang, client_id=None):
