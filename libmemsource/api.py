@@ -285,6 +285,49 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def create_tb(self, name, langs, client_id=None):
+        """
+        Get term bases
+
+        Args:
+            name ([str]): TM name
+            langs ([list]): Languages
+            client_id ([str], optional): client_id. Defaults to None.
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/termBases"
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "name": name,
+            "langs": langs,
+            }
+        if client_id is not None:
+            obj["client"] = {"id": client_id}
+        result = self.__call_rest(url, "POST", body=obj, params=params, headers=headers)
+        print("Creating TB {} ...".format(name))
+        return result
+
+    def upload_tb(self, tb_file_path, tb_id, charset="UTF-8", strictLangMatching="false", updateTerms="true"):
+        """
+        Upload tb file
+
+        Args:
+            tb_file_path (str): TB file path
+        """
+
+        url = "https://cloud.memsource.com/web/api2/v1/termBases/{}/upload".format(tb_id)
+        params = {
+            'token': self.token,
+            'charset': charset,
+            'strictLangMatching': strictLangMatching,
+            'updateTerms': updateTerms
+            }
+        headers = {"Content-Type" : "application/octet-stream", "Content-Disposition" : "filename*=UTF-8''{}".format(os.path.basename(tb_file_path))}
+        tb_file = open(tb_file_path, 'rb').read()
+        result = self.__call_rest(url, "POST", body=tb_file, params=params, headers=headers)
+        print("Uploading TB file {}...".format(tb_file))
+        return result
+
     def create_tm(self, name, source_lang, target_lang, client_id=None):
         """
         Create TM
