@@ -5,6 +5,7 @@ import urllib.request
 import json
 import os
 import ssl
+import copy
 from retry import retry
 
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -171,7 +172,7 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
-    def list_jobs(self, project_uid, workflow_level=1):
+    def list_jobs(self, project_uid, workflow_level=1, page_number=0, prev_result=None):
         """
         Get jobs list in project
 
@@ -182,12 +183,20 @@ class MemsourceAPI:
         Returns:
             json: jobs list in project
         """
-
         url = "https://cloud.memsource.com/web/api2/v2/projects/{}/jobs".format(project_uid)
-        params = {'token': self.token, 'workflowLevel': workflow_level}
+        params = {'token': self.token, 'workflowLevel': workflow_level, 'pageNumber': page_number}
 
-        print('Getting "{}" jobs list...'.format(project_uid))
+        print('Getting "{}:{}:{}" jobs list...'.format(project_uid, workflow_level, page_number))
         result = self.__call_rest(url, "GET", params=params)
+
+        if not prev_result is None:
+            prev_result['content'].extend(result['content'])
+            result['content'] = prev_result['content']
+
+        # 全ファイルを再帰処理する
+        if result['totalPages'] - 1 > result['pageNumber']:
+            self.list_jobs(project_uid, workflow_level, page_number + 1, result)
+
         return result
 
     def get_segments(self, project_uid, job_uid, begin_index, end_index):
@@ -463,7 +472,7 @@ class MemsourceAPI:
             "jobs": list(map(change_uid_to_dict, job_uids)),
             }
         result = self.__call_rest(url, "POST", body=obj, params=params, headers=headers)
-        print("Unning QA (batch) {} ...".format(project_uid))
+        print("Running QA (batch) {} ...".format(project_uid))
         return result
 
     @staticmethod
