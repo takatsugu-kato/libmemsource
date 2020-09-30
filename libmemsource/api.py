@@ -105,6 +105,8 @@ class MemsourceAPI:
                     result = response_body
                 elif content_type == "application/tmx":
                     result = response_body
+                elif content_type == "application/tbx":
+                    result = response_body
                 elif content_type == "":
                     result = str(response.getcode())
         except urllib.error.HTTPError as err:#If HTTP status code is 4xx or 5xx
@@ -112,6 +114,20 @@ class MemsourceAPI:
         except urllib.error.URLError as err:#If HTTP connection is fails
             print(err)
             raise APIException(err)
+        return result
+
+    def export_termbase(self, termbase_uid, export_format="Tbx"):
+        """
+        Export termbase
+
+        Args:
+            termbase_uid (int): termbase uid
+            format (str, optional): Tbx, Xlsx. Defaults to "Tbx".
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/termBases/{}/export".format(termbase_uid)
+        params = {'token': self.token, 'format': export_format}
+        print('Download tb "{}"...'.format(termbase_uid))
+        result = self.__call_rest(url, "GET", params=params)
         return result
 
     def get_job(self, project_uid, job_uid):
