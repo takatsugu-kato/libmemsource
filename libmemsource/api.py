@@ -116,6 +116,18 @@ class MemsourceAPI:
             raise APIException(err)
         return result
 
+    def get_termbase(self, termbase_uid):
+        """Get termbase
+
+        Args:
+            termbase_uid (int): tertmbase uid
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/termBases/{}".format(termbase_uid)
+        params = {'token': self.token}
+        print('Getting tb "{}"...'.format(termbase_uid))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def export_termbase(self, termbase_uid, export_format="Tbx"):
         """
         Export termbase
