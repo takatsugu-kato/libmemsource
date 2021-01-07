@@ -365,6 +365,21 @@ class MemsourceAPI:
         print("Uploading TB file {}...".format(tb_file_path))
         return result
 
+    def clear_tb(self, tb_id):
+        """
+        Delete TM
+
+        Args:
+            tb_id (str): TB id
+
+        Returns:
+            json: result json
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/termBases/{}/terms".format(tb_id)
+        params = {'token': self.token}
+        result = self.__call_rest(url, "DELETE", params=params)
+        return result
+
     def create_tm(self, name, source_lang, target_lang, client_id=None):
         """
         Create TM
