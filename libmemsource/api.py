@@ -365,6 +365,28 @@ class MemsourceAPI:
         print("Uploading TB file {}...".format(tb_file_path))
         return result
 
+    def edit_tb(self, tb_id, name, langs):
+        """Edit TB
+
+        Args:
+            tb_id (str): TB id
+            name (str): TB name
+            langs (list): languages
+
+        Returns:
+            obj: result obj
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/termBases/{}".format(tb_id)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "name": name,
+            "langs": langs,
+        }
+        result = self.__call_rest(url, "PUT", body=obj, params=params, headers=headers)
+        print("Editing TB {}...".format(name))
+        return result
+
     def clear_tb(self, tb_id):
         """
         Delete TM
@@ -478,6 +500,25 @@ class MemsourceAPI:
             "query": query,
             "sourceLang": source_lang,
             "targetLangs": target_langs
+        }
+        result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
+    def add_target_language_to_tm(self, tm_id, target_lang):
+        """Add target language to TM
+
+        Args:
+            tm_id (str): TM uid
+            target_lang (str): target language
+
+        Returns:
+            json: result json
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/transMemories/{}/targetLanguages".format(tm_id)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "language": target_lang
         }
         result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
         return result
