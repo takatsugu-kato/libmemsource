@@ -291,6 +291,39 @@ class MemsourceAPI:
         result = self.__call_rest(url, "POST", params=params, body=None, headers=headers)
         return result
 
+    def get_analysis(self, analysis_id):
+        """Get analysis
+
+        Args:
+            analysis_id (int): analysis ID
+
+        Returns:
+            json: analysis result
+        """
+        url = "https://cloud.memsource.com/web/api2/v3/analyses/{}".format(analysis_id)
+        params = {'token': self.token, 'format': format}
+
+        print('Getting "{}" analysis...'.format(analysis_id))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
+    def download_analysis(self, analysis_id, format="CSV_EXTENDED"):
+        """Download analysis
+
+        Args:
+            analysis_id (int): analysis ID
+            format (str, optional): analysis format. Defaults to "CSV_EXTENDED". Enum: "CSV" "CSV_EXTENDED" "LOG" "JSON"
+
+        Returns:
+            [type]: [description]
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/analyses/{}/download".format(analysis_id)
+        params = {'token': self.token, 'format': format}
+
+        print('Downloading "{}" analysis...'.format(analysis_id))
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def get_segments(self, project_uid, job_uid, begin_index, end_index):
         """
         Get Segment data
@@ -718,5 +751,6 @@ def check_async_is_complete(memsource_api, async_req_id):
     result = memsource_api.get_async_request(async_req_id)
     if result['asyncResponse']:
         print('Async request of "{}" is completed.'.format(async_req_id))
+        return True
     else:
         raise AsyncRequestException('Async request of "{}"  has not been completed yet'.format(async_req_id))
