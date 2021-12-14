@@ -703,7 +703,7 @@ def pretranslate_project(memsource_api, project_uid, jobs_list):
     return result['asyncRequest']['id']
 
 @retry(tries=60, delay=10)
-def check_async_pretranslate_is_complete(memsource_api, async_req_id, project_uid):
+def check_async_pretranslate_is_complete(memsource_api, async_req_id):
     """
     Check async pretransalte is complete
 
@@ -718,6 +718,6 @@ def check_async_pretranslate_is_complete(memsource_api, async_req_id, project_ui
 
     result = memsource_api.get_async_request(async_req_id)
     if result['asyncResponse']:
-        print('Pretranslate of "{}" is completed.'.format(project_uid))
+        print('Async request of "{}" is completed.'.format(async_req_id))
     else:
-        raise PreTranslateException('Pretranslate of "{}" has not been completed yet'.format(project_uid))
+        raise PreTranslateException('Async request of "{}"  has not been completed yet'.format(async_req_id))
