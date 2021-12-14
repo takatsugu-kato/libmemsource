@@ -18,8 +18,8 @@ class ProjectIDException(Exception):
     """Project ID Execption"""
     def __init__(self, message):
         self.message = message
-class PreTranslateException(Exception):
-    """Pretranslate Exception"""
+class AsyncRequestException(Exception):
+    """AsyncRequestException Exception"""
     def __init__(self, message):
         self.message = message
 
@@ -705,19 +705,18 @@ def pretranslate_project(memsource_api, project_uid, jobs_list):
 @retry(tries=60, delay=10)
 def check_async_pretranslate_is_complete(memsource_api, async_req_id):
     """
-    Check async pretransalte is complete
+    Check async request is complete
 
     Args:
         memsource_api (obj): memsource_api object
         async_req_id (str): async request id
-        project_uid (str): project uid for only using logging
 
     Raises:
-        PreTranslateException: [description]
+        AsyncRequestException: [description]
     """
 
     result = memsource_api.get_async_request(async_req_id)
     if result['asyncResponse']:
         print('Async request of "{}" is completed.'.format(async_req_id))
     else:
-        raise PreTranslateException('Async request of "{}"  has not been completed yet'.format(async_req_id))
+        raise AsyncRequestException('Async request of "{}"  has not been completed yet'.format(async_req_id))
