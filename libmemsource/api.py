@@ -703,7 +703,7 @@ def pretranslate_project(memsource_api, project_uid, jobs_list):
     return result['asyncRequest']['id']
 
 @retry(tries=60, delay=10)
-def check_async_pretranslate_is_complete(memsource_api, async_req_id):
+def check_async_is_complete(memsource_api, async_req_id):
     """
     Check async request is complete
 
