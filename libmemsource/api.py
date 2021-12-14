@@ -227,6 +227,70 @@ class MemsourceAPI:
 
         return result
 
+    def create_analysis(self, job_uids:list, type="PreAnalyse", include_fuzzy_repetitions=True, include_confirmed_segments=True, include_numbers=True, include_locked_segments=True, count_source_units=True, include_trans_memory=True, include_non_translatables=True, include_machine_translation_matches=True, trans_memory_post_editing=True, non_translatable_post_editing=True, machine_translate_post_editing=True, name="Analysis #{innerId}"):
+        """Create Analysis
+
+        Args:
+            job_uids (list): job uid list
+            type (str, optional): [description]. Defaults to "PreAnalyse". Enum: "PreAnalyse" "PostAnalyse" "Compare".
+            include_fuzzy_repetitions (bool, optional): [description]. Defaults to True.
+            include_confirmed_segments (bool, optional): [description]. Defaults to True.
+            include_numbers (bool, optional): [description]. Defaults to True.
+            include_locked_segments (bool, optional): [description]. Defaults to True.
+            count_source_units (bool, optional): [description]. Defaults to True.
+            include_trans_memory (bool, optional): [description]. Defaults to True.
+            include_non_translatables (bool, optional): [description]. Defaults to True.
+            include_machine_translation_matches (bool, optional): [description]. Defaults to True.
+            trans_memory_post_editing (bool, optional): [description]. Defaults to True.
+            non_translatable_post_editing (bool, optional): [description]. Defaults to True.
+            machine_translate_post_editing (bool, optional): [description]. Defaults to True.
+            name (str, optional): [description]. Defaults to "Analysis #{innerId}".
+
+        Returns:
+            json: asyncRequests
+        """
+        url = "https://cloud.memsource.com/web/api2/v2/analyses"
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+
+        obj = {
+            "jobs": [{"uid": job_uid} for job_uid in job_uids],
+            "includeFuzzyRepetitions": include_fuzzy_repetitions,
+            "includeConfirmedSegments": include_confirmed_segments,
+            "includeNumbers": include_numbers,
+            "includeLockedSegments": include_locked_segments,
+            "countSourceUnits": count_source_units,
+            "includeTransMemory": include_trans_memory,
+            "includeNonTranslatables": include_non_translatables,
+            "includeMachineTranslationMatches": include_machine_translation_matches,
+            "transMemoryPostEditing": trans_memory_post_editing,
+            "nonTranslatablePostEditing": non_translatable_post_editing,
+            "machineTranslatePostEditing": machine_translate_post_editing,
+            "name": name,
+            }
+
+        print('Creating analysis ...')
+        result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
+    def assigns_providers_from_template(self, project_uid, template_uid):
+        """Assigns providers from template
+
+        Args:
+            project_uid (str): Project UID
+            template_uid (str): Template UID
+
+        Returns:
+            json: jobs data
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}/applyTemplate/{}/assignProviders".format(project_uid, template_uid)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+
+        print('Assigning providers from template ...')
+        result = self.__call_rest(url, "POST", params=params, body=None, headers=headers)
+        return result
+
     def get_segments(self, project_uid, job_uid, begin_index, end_index):
         """
         Get Segment data
