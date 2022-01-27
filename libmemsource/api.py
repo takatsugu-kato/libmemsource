@@ -291,6 +291,27 @@ class MemsourceAPI:
         result = self.__call_rest(url, "POST", params=params, body=None, headers=headers)
         return result
 
+    def assigns_providers_from_template_specific_jobs(self, project_uid, template_uid, job_uids):
+        """Assigns providers from template
+
+        Args:
+            project_uid (str): Project UID
+            template_uid (str): Template UID
+            job_uids (list): Job UIDs
+
+        Returns:
+            json: jobs data
+        """
+        url = "https://cloud.memsource.com/web/api2/v1/projects/{}/applyTemplate/{}/assignProviders/forJobParts".format(project_uid, template_uid, job_uids)
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "jobs": list(map(change_uid_to_dict, job_uids)),
+            }
+        print('Assigning providers from template ...')
+        result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
     def get_analysis(self, analysis_id):
         """Get analysis
 
