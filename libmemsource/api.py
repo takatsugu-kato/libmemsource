@@ -239,6 +239,91 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def create_job(self, source_file_path:str, project_uid:str, target_langs:list, due:date=None, workflow_settings:list=None, assignments:list=None, import_settings:dict=None, use_project_file_import_settings:bool=None, callback_url:str=None, path:str=None, pre_translate:bool=None):
+        """Create Job
+
+        Args:
+            source_file_path (str): Source file path
+            project_uid (str): Project UID
+            target_langs (list): List of target locale code
+            due (date, optional): Due date. Defaults to None.
+            workflow_settings (list, optional): Workflow settings. Defaults to None.
+                                                "workflowSettings": [
+                                                    {
+                                                        "id": "64",
+                                                        "due": "2007-12-03T10:15:30.00Z",
+                                                        "assignments": [
+                                                            {
+                                                            "targetLang": "de",
+                                                            "providers": [
+                                                                {
+                                                                "id": "3",
+                                                                "type": "VENDOR"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ],
+                                                        "notifyProvider": {
+                                                            "organizationEmailTemplate": {
+                                                            "id": "39"
+                                                            },
+                                                            "notificationIntervalInMinutes": "10"
+                                                        }
+                                                    }
+                                                ]
+            assignments (list, optional): Assignments. Defaults to None.
+                                            "assignments": [
+                                                    {
+                                                    "targetLang": "cs_cz",
+                                                    "providers": [
+                                                        {
+                                                        "id": "4321",
+                                                        "type": "USER"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+            import_settings (dict, optional): Import Settings. Defaults to None. see Create import settings (https://cloud.memsource.com/web/docs/api#operation/createImportSettings)
+            use_project_file_import_settings (bool, optional): Use project file import settings. Defaults to None.
+            callback_url (str, optional): Callback URL. Defaults to None.
+            path (str, optional): original destination directory. Defaults to None.
+            pre_translate (bool, optional): set pre translate job after import. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
+        params = {'token': self.token}
+        url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs"
+
+        if workflow_settings is None:
+            workflow_settings = []
+        if assignments is None:
+            assignments = []
+
+        memsource =  {
+                "targetLangs" : target_langs,
+                "due" : due,
+                "workflowSettings" : workflow_settings,
+                "assignments" : assignments,
+                "importSettings" : import_settings,
+                "useProjectFileImportSettings" : use_project_file_import_settings,
+                "callbackUrl" : callback_url,
+                "path" : path,
+                "preTranslate" : pre_translate,
+            }
+        filename = os.path.basename(source_file_path)
+        headers = {
+            "Content-Type" : "application/octet-stream",
+            "Content-Disposition" : f"filename*=UTF-8''{filename}",
+            "Memsource" : json.dumps(memsource),
+            }
+
+        source_file = open(source_file_path, 'rb').read()
+        print('Creating job ...')
+        result = self.__call_rest(url, "POST", body=source_file, params=params, headers=headers)
+        return result
+
+
     def list_jobs(self, project_uid, workflow_level=1, page_number=0, prev_result=None):
         """
         Get jobs list in project
