@@ -186,6 +186,43 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def create_project_from_template(self, template_uid:str, name:str, source_lang:str=None, target_langs:list=None, workflow_steps:list=None, date_due:date=None, note:str=None, client_id:str=None):
+        """Create Project from Template
+
+        Args:
+            template_uid (str): template uid
+            name (str): project name
+            source_lang (str, optional): Source language code. Defaults to None.
+            target_langs (list, optional): Target language code. Defaults to None.
+            workflow_steps (list, optional): Workflow steps uids. Defaults to None.
+            date_due (date, optional): Due date. Defaults to None.
+            note (str, optional): Project note. Defaults to None.
+            client_id (str, optional): Client UID. Defaults to None.
+
+        Returns:
+            dict: Admin Project Manager V2
+        """
+        url = f"https://cloud.memsource.com/web/api2/v2/projects/applyTemplate/{template_uid}"
+        params = {'token': self.token}
+        headers = {"Content-Type" : "application/json"}
+
+        if workflow_steps is None:
+            workflow_steps = []
+        obj =  {
+                "name": name,
+                "sourceLang": source_lang,
+                "targetLangs": target_langs,
+                "workflowSteps": list(map(change_id_to_dict, workflow_steps)),
+                "dateDue": date_due,
+                "note": note,
+            }
+        if client_id:
+            obj["client"] = {"id": client_id}
+
+        print(f'Creating project using {template_uid}...')
+        result = self.__call_rest(url, "POST", params=params, body=obj, headers=headers)
+        return result
+
     def get_project(self, project_uid):
         """
         Get Project datails
@@ -695,6 +732,17 @@ def change_uid_to_dict(uid):
         dict: uid with uid key dict
     """
     return {'uid': uid}
+
+def change_id_to_dict(v_id):
+    """
+    Change ID to dict
+    Args:
+        v_id (str): id
+
+    Returns:
+        dict: id with uid key dict
+    """
+    return {'id': v_id}
 
 def get_index_from_value_and_key(data, val, key, value_type):
     """
