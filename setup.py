@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="libmemsource",
-    version="1.4.8",
+    version="1.4.9",
     author="tkato",
     author_email="kato@ideainstitute.co.jp",
     description="libmemsource module handles memsource.",
