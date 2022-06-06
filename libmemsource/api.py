@@ -74,7 +74,9 @@ class MemsourceAPI:
         if params is None:
             params = {}
         if headers is None:
-            headers = {}
+            headers = {'Authorization' : f'ApiToken {self.token}'}
+        else:
+            headers['Authorization'] = f'ApiToken {self.token}'
 
         if isinstance(body, dict):# Convert Python object to JSON
             data = json.dumps(body).encode("utf-8")
@@ -125,7 +127,7 @@ class MemsourceAPI:
             termbase_uid (int): tertmbase uid
         """
         url = f"https://cloud.memsource.com/web/api2/v1/termBases/{termbase_uid}"
-        params = {'token': self.token}
+        params = {}
         print(f'Getting tb "{termbase_uid}"...')
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -139,7 +141,7 @@ class MemsourceAPI:
             format (str, optional): Tbx, Xlsx. Defaults to "Tbx".
         """
         url = f"https://cloud.memsource.com/web/api2/v1/termBases/{termbase_uid}/export"
-        params = {'token': self.token, 'format': export_format}
+        params = {'format': export_format}
         print(f'Download tb "{termbase_uid}"...')
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -155,7 +157,7 @@ class MemsourceAPI:
             json: job datails
         """
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs/{job_uid}"
-        params = {'token': self.token}
+        params = {}
         print(f'Getting "{project_uid}:{job_uid}" jobs datals...')
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -169,7 +171,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/workflowSteps"
-        params = {'token': self.token}
+        params = {}
 
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -183,7 +185,7 @@ class MemsourceAPI:
         """
 
         url = "https://cloud.memsource.com/web/api2/v1/projects/"
-        params = {'token': self.token}
+        params = {}
 
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -205,7 +207,7 @@ class MemsourceAPI:
             dict: Admin Project Manager V2
         """
         url = f"https://cloud.memsource.com/web/api2/v2/projects/applyTemplate/{template_uid}"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
 
         if workflow_steps is None:
@@ -233,7 +235,7 @@ class MemsourceAPI:
             project_uid (str): project UID
         """
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}"
-        params = {'token': self.token}
+        params = {}
 
         print(f'Getting "{project_uid}" project...')
         result = self.__call_rest(url, "GET", params=params)
@@ -292,7 +294,7 @@ class MemsourceAPI:
         Returns:
             _type_: _description_
         """
-        params = {'token': self.token}
+        params = {}
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs"
 
         if workflow_settings is None:
@@ -336,7 +338,7 @@ class MemsourceAPI:
             json: jobs list in project
         """
         url = f"https://cloud.memsource.com/web/api2/v2/projects/{project_uid}/jobs"
-        params = {'token': self.token, 'workflowLevel': workflow_level, 'pageNumber': page_number}
+        params = {'workflowLevel': workflow_level, 'pageNumber': page_number}
 
         print(f'Getting "{project_uid}:{workflow_level}:{page_number}" jobs list...')
         result = self.__call_rest(url, "GET", params=params)
@@ -374,7 +376,7 @@ class MemsourceAPI:
             json: asyncRequests
         """
         url = "https://cloud.memsource.com/web/api2/v2/analyses"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
 
         obj = {
@@ -408,7 +410,7 @@ class MemsourceAPI:
             json: jobs data
         """
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/applyTemplate/{template_uid}/assignProviders"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
 
         print('Assigning providers from template ...')
@@ -427,7 +429,7 @@ class MemsourceAPI:
             json: jobs data
         """
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/applyTemplate/{template_uid}/assignProviders/forJobParts"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "jobs": list(map(change_uid_to_dict, job_uids)),
@@ -446,7 +448,7 @@ class MemsourceAPI:
             json: analysis result
         """
         url = f"https://cloud.memsource.com/web/api2/v3/analyses/{analysis_id}"
-        params = {'token': self.token, 'format': format}
+        params = {'format': format}
 
         print(f'Getting "{analysis_id}" analysis...')
         result = self.__call_rest(url, "GET", params=params)
@@ -463,7 +465,7 @@ class MemsourceAPI:
             [type]: [description]
         """
         url = f"https://cloud.memsource.com/web/api2/v1/analyses/{analysis_id}/download"
-        params = {'token': self.token, 'format': log_format}
+        params = {'format': log_format}
 
         print(f'Downloading "{analysis_id}" analysis...')
         result = self.__call_rest(url, "GET", params=params)
@@ -484,7 +486,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs/{job_uid}/segments"
-        params = {'token': self.token, 'beginIndex': begin_index, 'endIndex': end_index}
+        params = {'beginIndex': begin_index, 'endIndex': end_index}
 
         print(f'Getting "{project_uid}:{job_uid}:{begin_index}:{end_index}" segment data...')
         result = self.__call_rest(url, "GET", params=params)
@@ -502,7 +504,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs/preTranslate"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "jobs": job_uids,
@@ -532,7 +534,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/async/{async_request_id}"
-        params = {'token': self.token}
+        params = {}
 
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -545,7 +547,7 @@ class MemsourceAPI:
             job_uid (str): Job id
         """
         url = f"https://cloud.memsource.com/web/api2/v1/jobs/{job_uid}/conversations"
-        params = {'token': self.token}
+        params = {}
         print(f'Getting concersations (job_uid: "{job_uid}")...')
         result = self.__call_rest(url, "GET", params=params)
         return result
@@ -558,7 +560,7 @@ class MemsourceAPI:
             tm_id (str): TM id
         """
         url = f"https://cloud.memsource.com/web/api2/v1/transMemories/{tm_id}/export"
-        params = {'token': self.token}
+        params = {}
         # headers = {"Content-Type" : "application/json"}
         print(f'Downloading TMX (tm_id: "{tm_id}")...')
         result = self.__call_rest(url, "GET", params=params)
@@ -574,7 +576,7 @@ class MemsourceAPI:
             client_id ([str], optional): client_id. Defaults to None.
         """
         url = "https://cloud.memsource.com/web/api2/v1/termBases"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "name": name,
@@ -596,7 +598,6 @@ class MemsourceAPI:
 
         url = f"https://cloud.memsource.com/web/api2/v1/termBases/{tb_id}/upload"
         params = {
-            'token': self.token,
             'charset': charset,
             'strictLangMatching': strict_lang_matching,
             'updateTerms': update_terms
@@ -620,7 +621,7 @@ class MemsourceAPI:
             obj: result obj
         """
         url = f"https://cloud.memsource.com/web/api2/v1/termBases/{tb_id}"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "name": name,
@@ -641,7 +642,7 @@ class MemsourceAPI:
             json: result json
         """
         url = f"https://cloud.memsource.com/web/api2/v1/termBases/{tb_id}/terms"
-        params = {'token': self.token}
+        params = {}
         result = self.__call_rest(url, "DELETE", params=params)
         return result
 
@@ -656,7 +657,7 @@ class MemsourceAPI:
             client_id ([str], optional): client_id. Defaults to None.
         """
         url = "https://cloud.memsource.com/web/api2/v1/transMemories"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "name": name,
@@ -678,7 +679,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/transMemories/{tm_id}/import"
-        params = {'token': self.token}
+        params = {}
         filename = os.path.basename(tmx_file_path)
         headers = {"Content-Type" : "application/octet-stream", "Content-Disposition" : f"filename*=UTF-8''{filename}"}
         tmx_file = open(tmx_file_path, 'rb').read()
@@ -696,7 +697,7 @@ class MemsourceAPI:
         """
 
         url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}/jobs/bilingualFile"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {"jobs": [{"uid": job_uid}]}
 
@@ -716,7 +717,7 @@ class MemsourceAPI:
         """
 
         url = "https://cloud.memsource.com/web/api2/v1/bilingualFiles"
-        params = {'token': self.token, 'saveToTransMemory': "None"}
+        params = {'saveToTransMemory': "None"}
         headers = {"Content-Type" : "application/octet-stream"}
         mxlf_file_obj = open(mxlf_file_path, "rb")
         print(f'Uploading "{mxlf_file_path}" ...')
@@ -738,7 +739,7 @@ class MemsourceAPI:
             json: result json
         """
         url = f"https://cloud.memsource.com/web/api2/v1/transMemories/{tm_id}/search"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "query": query,
@@ -759,7 +760,7 @@ class MemsourceAPI:
             json: result json
         """
         url = f"https://cloud.memsource.com/web/api2/v1/transMemories/{tm_id}/targetLanguages"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "language": target_lang
@@ -778,7 +779,7 @@ class MemsourceAPI:
             json: result json
         """
         url = f"https://cloud.memsource.com/web/api2/v1/transMemories/{tm_id}"
-        params = {'token': self.token}
+        params = {}
         result = self.__call_rest(url, "DELETE", params=params)
         return result
 
@@ -794,7 +795,7 @@ class MemsourceAPI:
             json: qa result
         """
         url = f"https://cloud.memsource.com/web/api2/v3/projects/{project_uid}/jobs/qualityAssurances/run/"
-        params = {'token': self.token}
+        params = {}
         headers = {"Content-Type" : "application/json"}
         obj = {
             "jobs": list(map(change_uid_to_dict, job_uids)),
