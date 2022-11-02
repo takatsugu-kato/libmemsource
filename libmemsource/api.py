@@ -162,6 +162,44 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def download_target_file_async(self, project_uid, job_uid):
+        """Download target file (async)
+
+        Args:
+            project_uid (str): Project UID
+            job_uid (str): Job UID
+
+        Returns:
+            Obj : async object
+        """
+        url = f"https://cloud.memsource.com/web/api2/v2/projects/{project_uid}/jobs/{job_uid}/targetFile"
+        params = {
+            "projectUid": project_uid,
+            "jobUid": job_uid,
+        }
+        result = self.__call_rest(url, "PUT", params=params)
+        print(f"Creating download target file async of {job_uid}...")
+        return result
+
+    def download_target_file_based_on_async_request(self, project_uid, job_uid, async_request_id, target_file_format="ORIGINAL"):
+        """Download target file based on async request
+
+        Args:
+            project_uid (str): Project UID
+            job_uid (str): Job UID
+            async_request_id (int): Async request ID
+            target_file_format (str, optional): Target file format. Defaults to "ORIGINAL". Enum: "ORIGINAL" "PDF"
+
+        Returns:
+            _type_: _description_
+        """
+        url = f"https://cloud.memsource.com/web/api2/v2/projects/{project_uid}/jobs/{job_uid}/downloadTargetFile/{async_request_id}"
+        params = {'format': target_file_format}
+
+        print(f'Downloading "{job_uid}" target file...')
+        result = self.__call_rest(url, "GET", params=params)
+        return result
+
     def get_workflow_steps(self, project_uid):
         """
         Get workflow level
