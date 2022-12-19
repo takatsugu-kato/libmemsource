@@ -279,6 +279,84 @@ class MemsourceAPI:
         result = self.__call_rest(url, "GET", params=params)
         return result
 
+    def edit_project(self,
+                    project_uid:str,
+                    name:str,
+                    # status:str=None,
+                    # client_id:str=None,
+                    # business_unit_id:str=None,
+                    # domain_id:str=None,
+                    # sub_domain_id:str=None,
+                    # owner_id:str=None,
+                    # purchase_order:str=None,
+                    # due_date:date=None,
+                    # note:str=None,
+                    # file_handover:bool=None,
+                    # workflow_step_id:str=None,
+                    # lqa_profile_id:str=None,
+                    # archived:bool=None
+    ):
+        """Edit Project
+
+        Args:
+            project_uid (str): project
+            name (str): name
+            # status (str, optional): status. Defaults to None.
+            #                             Enum: "ACCEPTED_BY_VENDOR" "ASSIGNED" "CANCELLED" "COMPLETED" "COMPLETED_BY_VENDOR" "DECLINED_BY_VENDOR" "NEW"
+            # client_id (str, optional): client_id. Defaults to None.
+            # business_unit_id (str, optional): business_unit_id. Defaults to None.
+            # domain_id (str, optional): domain_id. Defaults to None.
+            # sub_domain_id (str, optional): sub_domain_id. Defaults to None.
+            # owner_id (str, optional): owner_id. Defaults to None.
+            # purchase_order (str, optional): purchase_order. Defaults to None.
+            # due_date (date, optional): due_date. Defaults to None.
+            # note (str, optional): note. Defaults to None.
+            # file_handover (bool, optional): file_handover. Defaults to None.
+            # workflow_step_id (str, optional): workflow_step_id. Defaults to None.
+            # lqa_profile_id (str, optional): lqa_profile_id. Defaults to None.
+            # archived (bool, optional): archived. Defaults to None.
+        """
+        url = f"https://cloud.memsource.com/web/api2/v1/projects/{project_uid}"
+        params = {}
+        headers = {"Content-Type" : "application/json"}
+        obj = {
+            "name": name,
+            # "status": status,
+            # "client": {
+            #     "id": client_id
+            # },
+            # "businessUnit": {
+            #     "id": business_unit_id
+            # },
+            # "domain": {
+            #     "id": domain_id
+            # },
+            # "subDomain": {
+            #     "id": sub_domain_id
+            # },
+            # "owner": {
+            #     "id": owner_id
+            # },
+            # "purchaseOrder": purchase_order,
+            # "dateDue": due_date,
+            # "note": note,
+            # "fileHandover": file_handover,
+            # "lqaProfiles": [
+            #     {
+            #     "workflowStep": {
+            #         "id": workflow_step_id
+            #     },
+            #     "lqaProfile": {
+            #         "uid": lqa_profile_id
+            #     }
+            #     }
+            # ],
+            # "archived": archived
+}
+        print(f'Editing "{project_uid}" project...')
+        result = self.__call_rest(url, "PUT", body=obj, params=params, headers=headers)
+        return result
+
     def create_job(self, source_file_path:str, project_uid:str, target_langs:list, due:date=None, workflow_settings:list=None, assignments:list=None, import_settings:dict=None, use_project_file_import_settings:bool=None, callback_url:str=None, path:str=None, pre_translate:bool=None):
         """Create Job
 
